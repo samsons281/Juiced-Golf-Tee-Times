@@ -16,6 +16,14 @@ body { margin:0; font-family:Arial; background:#0b0b0b; color:white; }
 <body>
 
 <div class="header">Juiced Golf Tee Times</div>
+<div id="date" style="text-align:center; color:#ccc; margin-bottom:10px;"></div>
+
+<script>
+const today = new Date();
+const options = { weekday: 'long', month: 'short', day: 'numeric' };
+document.getElementById("date").innerText =
+  "Showing earliest tee times for " + today.toLocaleDateString(undefined, options);
+</script>
 
 <div class="card"><div class="course">Cog Hill</div><div class="time">Earliest: 6:10 AM</div><div class="button"><a href="https://coghillgolf.com/" target="_blank">Book</a></div></div>
 <div class="card"><div class="course">Orchard Valley</div><div class="time">Earliest: 6:20 AM</div><div class="button"><a href="https://www.orchardvalleygolf.com/" target="_blank">Book</a></div></div>
