@@ -7,6 +7,7 @@
 body { margin:0; font-family:Arial; background:#0b0b0b; color:white; }
 .header { text-align:center; padding:20px 20px 8px; font-size:24px; color:#39FF14; font-weight:bold; }
 .subheader { text-align:center; color:#ccc; margin-bottom:12px; }
+.note { text-align:center; color:#aaa; margin-bottom:10px; font-size:14px; }
 .card { background:#1a1a1a; margin:10px; padding:15px; border-radius:10px; }
 .course { font-size:18px; font-weight:bold; }
 .date { color:#39FF14; margin-top:6px; }
@@ -18,6 +19,7 @@ body { margin:0; font-family:Arial; background:#0b0b0b; color:white; }
 <body>
 
 <div class="header">Juiced Golf Tee Times</div>
+<div class="note">18-hole tee times (morning)</div>
 <div class="subheader" id="subheader"></div>
 <div id="courses"></div>
 
@@ -43,7 +45,6 @@ const courses = [
   ["Blackberry Oaks GC", "6:30 AM", "https://www.google.com/search?q=Blackberry+Oaks+Golf+Course+tee+times"],
   ["Bliss Creek GC", "6:35 AM", "https://www.google.com/search?q=Bliss+Creek+Golf+Course+tee+times"]
 ];
-];
 
 const today = new Date();
 const nextSaturday = new Date(today);
@@ -64,8 +65,8 @@ document.getElementById("subheader").innerText =
 document.getElementById("courses").innerHTML = courses.map(c => `
   <div class="card">
     <div class="course">${c[0]}</div>
-    <div class="date">Next Saturday: ${dateText}</div>
-    <div class="time">Earliest morning tee time: ${c[1]}</div>
+    <div class="date">${dateText}</div>
+    <div class="time">Earliest 18-hole tee time: ${c[1]}</div>
     <div class="button"><a href="${c[2]}" target="_blank">Book</a></div>
   </div>
 `).join("");
