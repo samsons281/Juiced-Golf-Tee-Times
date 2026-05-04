@@ -16,6 +16,24 @@ body { margin:0; font-family:Arial; background:#0b0b0b; color:white; }
 <body>
 
 <div class="header">Juiced Golf Tee Times</div>
+<div id="nextSaturday" style="text-align:center; color:#ccc; margin-bottom:12px; font-size:16px;"></div>
+
+<script>
+const today = new Date();
+const nextSaturday = new Date(today);
+const day = today.getDay();
+let daysUntilSaturday = (6 - day + 7) % 7;
+if (daysUntilSaturday === 0) daysUntilSaturday = 7;
+nextSaturday.setDate(today.getDate() + daysUntilSaturday);
+
+document.getElementById("nextSaturday").innerText =
+  "Earliest tee times for Saturday, " +
+  nextSaturday.toLocaleDateString(undefined, {
+    month: "long",
+    day: "numeric",
+    year: "numeric"
+  });
+</script>
 <div id="date" style="text-align:center; color:#ccc; margin-bottom:10px;"></div>
 
 <script>
