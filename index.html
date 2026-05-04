@@ -5,9 +5,11 @@
 <title>Juiced Golf Tee Times</title>
 <style>
 body { margin:0; font-family:Arial; background:#0b0b0b; color:white; }
-.header { text-align:center; padding:20px; font-size:24px; color:#39FF14; font-weight:bold; }
+.header { text-align:center; padding:20px 20px 8px; font-size:24px; color:#39FF14; font-weight:bold; }
+.subheader { text-align:center; color:#ccc; margin-bottom:12px; }
 .card { background:#1a1a1a; margin:10px; padding:15px; border-radius:10px; }
-.course { font-size:18px; }
+.course { font-size:18px; font-weight:bold; }
+.date { color:#39FF14; margin-top:6px; }
 .time { color:#ccc; margin:5px 0; }
 .button { background:#ff2e2e; padding:10px; border-radius:5px; text-align:center; margin-top:10px; }
 .button a { color:white; text-decoration:none; font-weight:bold; display:block; }
@@ -16,52 +18,57 @@ body { margin:0; font-family:Arial; background:#0b0b0b; color:white; }
 <body>
 
 <div class="header">Juiced Golf Tee Times</div>
-<div id="nextSaturday" style="text-align:center; color:#ccc; margin-bottom:12px; font-size:16px;"></div>
+<div class="subheader" id="subheader"></div>
+<div id="courses"></div>
 
 <script>
+const courses = [
+  ["Cog Hill", "6:10 AM", "https://coghillgolf.com/"],
+  ["Orchard Valley", "6:20 AM", "https://www.orchardvalleygolf.com/"],
+  ["Prairie Bluff", "6:25 AM", "https://prairiebluffgc.com/"],
+  ["Mistwood", "6:00 AM", "https://www.mistwoodgc.com/"],
+  ["Village Links of Glen Ellyn", "6:30 AM", "https://www.villageofglenellyn.org/"],
+  ["The Preserve at Oak Meadows", "6:20 AM", "https://preserveatoakmeadows.com/"],
+  ["Maple Meadows", "6:15 AM", "https://maplemeadowsgolf.com/"],
+  ["Arrowhead", "6:30 AM", "https://arrowheadgolfclub.org/"],
+  ["Prairie Landing", "6:20 AM", "https://prairielanding.com/"],
+  ["The Sanctuary", "6:25 AM", "https://sanctuarygolfcourse.com/"],
+  ["George Dunne", "6:10 AM", "https://fpdcc.com/"],
+  ["Wedgewood Golf Course", "6:20 AM", "https://wedgewoodgc.com/"],
+  ["Naperbrook GC", "6:10 AM", "https://www.napervilleparks.org/golfnaperbrook"],
+  ["Springbrook GC", "6:15 AM", "https://www.napervilleparks.org/golfspringbrook"],
+  ["Bolingbrook Golf Club", "6:30 AM", "https://www.bolingbrookgolfclub.com/"],
+  ["Broken Arrow GC", "6:25 AM", "https://brokenarrowgolf.com/"],
+  ["Phillips Park GC", "6:20 AM", "https://www.aurora-il.org/"],
+  ["Blackberry Oaks GC", "6:30 AM", "https://golfblackberryoaks.com/"],
+  ["Bliss Creek GC", "6:35 AM", "https://blisscreekgolfclub.com/"]
+];
+
 const today = new Date();
 const nextSaturday = new Date(today);
-const day = today.getDay();
-let daysUntilSaturday = (6 - day + 7) % 7;
+let daysUntilSaturday = (6 - today.getDay() + 7) % 7;
 if (daysUntilSaturday === 0) daysUntilSaturday = 7;
 nextSaturday.setDate(today.getDate() + daysUntilSaturday);
 
-document.getElementById("nextSaturday").innerText =
-  "Earliest tee times for Saturday, " +
-  nextSaturday.toLocaleDateString(undefined, {
-    month: "long",
-    day: "numeric",
-    year: "numeric"
-  });
-</script>
-<div id="date" style="text-align:center; color:#ccc; margin-bottom:10px;"></div>
+const dateText = nextSaturday.toLocaleDateString(undefined, {
+  weekday: "long",
+  month: "long",
+  day: "numeric",
+  year: "numeric"
+});
 
-<script>
-const today = new Date();
-const options = { weekday: 'long', month: 'short', day: 'numeric' };
-document.getElementById("date").innerText =
-  "Showing earliest tee times for " + today.toLocaleDateString(undefined, options);
-</script>
+document.getElementById("subheader").innerText =
+  "Earliest morning tee times for " + dateText;
 
-<div class="card"><div class="course">Cog Hill</div><div class="time">Earliest: 6:10 AM</div><div class="button"><a href="https://coghillgolf.com/" target="_blank">Book</a></div></div>
-<div class="card"><div class="course">Orchard Valley</div><div class="time">Earliest: 6:20 AM</div><div class="button"><a href="https://www.orchardvalleygolf.com/" target="_blank">Book</a></div></div>
-<div class="card"><div class="course">Prairie Bluff</div><div class="time">Earliest: 6:25 AM</div><div class="button"><a href="https://prairiebluffgc.com/" target="_blank">Book</a></div></div>
-<div class="card"><div class="course">Mistwood</div><div class="time">Earliest: 6:00 AM</div><div class="button"><a href="https://www.mistwoodgc.com/" target="_blank">Book</a></div></div>
-<div class="card"><div class="course">Village Links of Glen Ellyn</div><div class="time">Earliest: 6:30 AM</div><div class="button"><a href="https://www.villageofglenellyn.org/" target="_blank">Book</a></div></div>
-<div class="card"><div class="course">The Preserve at Oak Meadows</div><div class="time">Earliest: 6:20 AM</div><div class="button"><a href="https://preserveatoakmeadows.com/" target="_blank">Book</a></div></div>
-<div class="card"><div class="course">Maple Meadows</div><div class="time">Earliest: 6:15 AM</div><div class="button"><a href="https://maplemeadowsgolf.com/" target="_blank">Book</a></div></div>
-<div class="card"><div class="course">Arrowhead</div><div class="time">Earliest: 6:30 AM</div><div class="button"><a href="https://arrowheadgolfclub.org/" target="_blank">Book</a></div></div>
-<div class="card"><div class="course">Prairie Landing</div><div class="time">Earliest: 6:20 AM</div><div class="button"><a href="https://prairielanding.com/" target="_blank">Book</a></div></div>
-<div class="card"><div class="course">The Sanctuary</div><div class="time">Earliest: 6:25 AM</div><div class="button"><a href="https://sanctuarygolfcourse.com/" target="_blank">Book</a></div></div>
-<div class="card"><div class="course">George Dunne</div><div class="time">Earliest: 6:10 AM</div><div class="button"><a href="https://fpdcc.com/" target="_blank">Book</a></div></div>
-<div class="card"><div class="course">Wedgewood Golf Course</div><div class="time">Earliest: 6:20 AM</div><div class="button"><a href="https://wedgewoodgc.com/" target="_blank">Book</a></div></div>
-<div class="card"><div class="course">Naperbrook GC</div><div class="time">Earliest: 6:10 AM</div><div class="button"><a href="https://www.napervilleparks.org/golfnaperbrook" target="_blank">Book</a></div></div>
-<div class="card"><div class="course">Springbrook GC</div><div class="time">Earliest: 6:15 AM</div><div class="button"><a href="https://www.napervilleparks.org/golfspringbrook" target="_blank">Book</a></div></div>
-<div class="card"><div class="course">Bolingbrook Golf Club</div><div class="time">Earliest: 6:30 AM</div><div class="button"><a href="https://www.bolingbrookgolfclub.com/" target="_blank">Book</a></div></div>
-<div class="card"><div class="course">Broken Arrow GC</div><div class="time">Earliest: 6:25 AM</div><div class="button"><a href="https://brokenarrowgolf.com/" target="_blank">Book</a></div></div>
-<div class="card"><div class="course">Phillips Park GC</div><div class="time">Earliest: 6:20 AM</div><div class="button"><a href="https://www.aurora-il.org/" target="_blank">Book</a></div></div>
-<div class="card"><div class="course">Blackberry Oaks GC</div><div class="time">Earliest: 6:30 AM</div><div class="button"><a href="https://golfblackberryoaks.com/" target="_blank">Book</a></div></div>
-<div class="card"><div class="course">Bliss Creek GC</div><div class="time">Earliest: 6:35 AM</div><div class="button"><a href="https://blisscreekgolfclub.com/" target="_blank">Book</a></div></div>
+document.getElementById("courses").innerHTML = courses.map(c => `
+  <div class="card">
+    <div class="course">${c[0]}</div>
+    <div class="date">Next Saturday: ${dateText}</div>
+    <div class="time">Earliest morning tee time: ${c[1]}</div>
+    <div class="button"><a href="${c[2]}" target="_blank">Book</a></div>
+  </div>
+`).join("");
+</script>
 
 </body>
 </html>
