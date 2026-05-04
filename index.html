@@ -29,4 +29,48 @@ const courses = [
   ["Orchard Valley", "6:20 AM", "https://www.orchardvalleygolf.com/"],
   ["Prairie Bluff", "6:25 AM", "https://prairiebluffgc.com/"],
   ["Mistwood", "6:00 AM", "https://www.mistwoodgc.com/"],
-  ["Village
+  ["Village Links of Glen Ellyn", "6:30 AM", "https://www.villageofglenellyn.org/"],
+  ["The Preserve at Oak Meadows", "6:20 AM", "https://preserveatoakmeadows.com/"],
+  ["Maple Meadows", "6:15 AM", "https://maplemeadowsgolf.com/"],
+  ["Arrowhead", "6:30 AM", "https://arrowheadgolfclub.org/"],
+  ["Prairie Landing", "6:20 AM", "https://prairielanding.com/"],
+  ["The Sanctuary", "6:25 AM", "https://sanctuarygolfcourse.com/"],
+  ["George Dunne", "6:10 AM", "https://fpdcc.com/"],
+  ["Wedgewood Golf Course", "6:20 AM", "https://wedgewoodgc.com/"],
+  ["Naperbrook GC", "6:10 AM", "https://www.napervilleparks.org/golfnaperbrook"],
+  ["Springbrook GC", "6:15 AM", "https://www.napervilleparks.org/golfspringbrook"],
+  ["Bolingbrook Golf Club", "6:30 AM", "https://www.bolingbrookgolfclub.com/"],
+  ["Broken Arrow GC", "6:25 AM", "https://brokenarrowgolf.com/"],
+  ["Phillips Park GC", "6:20 AM", "https://www.aurora-il.org/"],
+  ["Blackberry Oaks GC", "6:30 AM", "https://golfblackberryoaks.com/"],
+  ["Bliss Creek GC", "6:35 AM", "https://blisscreekgolfclub.com/"]
+];
+
+const today = new Date();
+const nextSaturday = new Date(today);
+let daysUntilSaturday = (6 - today.getDay() + 7) % 7;
+if (daysUntilSaturday === 0) daysUntilSaturday = 7;
+nextSaturday.setDate(today.getDate() + daysUntilSaturday);
+
+const dateText = nextSaturday.toLocaleDateString(undefined, {
+  weekday: "long",
+  month: "long",
+  day: "numeric",
+  year: "numeric"
+});
+
+document.getElementById("subheader").innerText =
+  "Earliest morning tee times for " + dateText;
+
+document.getElementById("courses").innerHTML = courses.map(c => `
+  <div class="card">
+    <div class="course">${c[0]}</div>
+    <div class="date">${dateText}</div>
+    <div class="time">Earliest 18-hole tee time: ${c[1]}</div>
+    <div class="button"><a href="${c[2]}" target="_blank">Book</a></div>
+  </div>
+`).join("");
+</script>
+
+</body>
+</html>
