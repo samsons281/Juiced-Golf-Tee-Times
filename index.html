@@ -1,39 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Juiced Golf Tee Times</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial;
+      background: black;
+      color: white;
+    }
+    .header {
+      text-align: center;
+      padding: 20px;
+      font-size: 24px;
+    }
+    .card {
+      background: #1a1a1a;
+      margin: 10px;
+      padding: 15px;
+      border-radius: 10px;
+    }
+    .course {
+      font-size: 18px;
+    }
+    .time {
+      color: #ccc;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="header">Juiced Golf Tee Times</div>
+
+<div id="courses"></div>
+
 <script>
 const API_URL = "https://juiced-golf-backend.onrender.com/api/tee-times";
 
 async function loadData() {
-  const res = await fetch(API_URL);
-  const data = await res.json();
+  try {
+    const res = await fetch(API_URL);
+    const data = await res.json();
 
-  const results = data.results;
+    const results = data.results;
 
-  // Convert to array
-  let courses = Object.keys(results).map(name => ({
-    name,
-    time: results[name].time
-  }));
+    let courses = Object.keys(results).map(name => ({
+      name,
+      time: results[name].time
+    }));
 
-  // Sort by time
-  courses.sort((a, b) => {
-    return new Date("1970/01/01 " + a.time) - new Date("1970/01/01 " + b.time);
-  });
+    courses.sort((a, b) => {
+      return new Date("1970/01/01 " + a.time) - new Date("1970/01/01 " + b.time);
+    });
 
-  // BEST tee time
-  const best = courses[0];
+    const best = courses[0];
 
-  // Render
-  document.getElementById("courses").innerHTML = `
-    <div class="card">
-      <div class="course">🔥 Best Available</div>
-      <div class="time">${best.time} — ${best.name}</div>
-    </div>
-  ` + courses.map(c => `
-    <div class="card">
-      <div class="course">${c.name}</div>
-      <div class="time">${c.time}</div>
-    </div>
-  `).join("");
+    document.getElementById("courses").innerHTML =
+      `<div class="card">
+        <div class="course">🔥 Best Available</div>
+        <div class="time">${best.time} — ${best.name}</div>
+      </div>` +
+      courses.map(c => `
+        <div class="card">
+          <div class="course">${c.name}</div>
+          <div class="time">${c.time}</div>
+        </div>
+      `).join("");
+
+  } catch (err) {
+    document.getElementById("courses").innerHTML =
+      `<div class="card">Error loading tee times</div>`;
+    console.error(err);
+  }
 }
 
 loadData();
 </script>
+
+</body>
+</html>
