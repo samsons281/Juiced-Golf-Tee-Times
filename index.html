@@ -1,120 +1,39 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Juiced Golf Tee Times</title>
-<style>
-body { margin:0; font-family:Arial; background:#0b0b0b; color:white; }
-.header { text-align:center; padding:20px 20px 8px; font-size:24px; color:#39FF14; font-weight:bold; }
-.subheader { text-align:center; color:#ccc; margin-bottom:12px; padding:0 12px; }
-.note { text-align:center; color:#aaa; margin-bottom:10px; font-size:14px; }
-.card { background:#1a1a1a; margin:10px; padding:15px; border-radius:10px; }
-.course { font-size:18px; font-weight:bold; }
-.date { color:#39FF14; margin-top:6px; }
-.time { color:#ccc; margin:5px 0; }
-.status { color:#aaa; font-size:13px; margin-top:4px; }
-.button { background:#ff2e2e; padding:10px; border-radius:5px; text-align:center; margin-top:10px; }
-.button a { color:white; text-decoration:none; font-weight:bold; display:block; }
-</style>
-</head>
-<body>
-
-<div class="header">Juiced Golf Tee Times</div>
-<div class="note">18-hole morning tee times only</div>
-<div class="subheader" id="subheader"></div>
-<div id="courses"></div>
-
 <script>
-/*
-LIVE TEE TIME NOTE:
-GitHub Pages cannot scrape tee-time sites directly.
-To make this truly live, replace API_URL below with your backend scraper URL.
-Example:
-const API_URL = "https://your-backend.onrender.com/api/tee-times";
-*/
 const API_URL = "https://juiced-golf-backend.onrender.com/api/tee-times";
 
-const courses = [
-  ["Cog Hill", "https://coghillgolf.com/"],
-  ["Orchard Valley", "https://www.orchardvalleygolf.com/"],
-  ["Prairie Bluff", "https://prairiebluffgc.com/"],
-  ["Mistwood", "https://www.mistwoodgc.com/"],
-  ["Village Links of Glen Ellyn", "https://villagelinksgolf.com"],
-  ["The Preserve at Oak Meadows", "https://dupagegolf.com/oak-meadows/"],
-  ["Maple Meadows", "https://dupagegolf.com/maple-meadows-closed-for-renovation/"],
-  ["Arrowhead", "https://arrowheadgolfclub.org/"],
-  ["Prairie Landing", "https://prairielanding.com/"],
-  ["The Sanctuary", "https://sanctuarygolfcourse.com/"],
-  ["George Dunne", "https://georgedunne.forestpreservegolf.com/"],
-  ["Wedgewood Golf Course", "https://golfjoliet.com/"],
-  ["Naperbrook GC", "https://golfnaperville.org/"],
-  ["Springbrook GC", "https://golfnaperville.org/"],
-  ["Bolingbrook Golf Club", "https://www.bolingbrookgolfclub.com/"],
-  ["Broken Arrow GC", "https://www.golfbrokenarrow.com/"],
-  ["Phillips Park GC", "https://www.phillipsparkaurora.com/"],
-  ["Blackberry Oaks GC", "https://blackberryoaks.com/"],
-  ["Bliss Creek GC", "https://www.blisscreekgolf.com/"]
-];
+async function loadData() {
+  const res = await fetch(API_URL);
+  const data = await res.json();
 
-const today = new Date();
-const nextSaturday = new Date(today);
-let daysUntilSaturday = (6 - today.getDay() + 7) % 7;
-if (daysUntilSaturday === 0) daysUntilSaturday = 7;
-nextSaturday.setDate(today.getDate() + daysUntilSaturday);
+  const results = data.results;
 
-const dateText = nextSaturday.toLocaleDateString(undefined, {
-  weekday: "long",
-  month: "long",
-  day: "numeric",
-  year: "numeric"
-});
+  // Convert to array
+  let courses = Object.keys(results).map(name => ({
+    name,
+    time: results[name].time
+  }));
 
-document.getElementById("subheader").innerText =
-  "Earliest available 18-hole morning tee times for " + dateText;
+  // Sort by time
+  courses.sort((a, b) => {
+    return new Date("1970/01/01 " + a.time) - new Date("1970/01/01 " + b.time);
+  });
 
-function renderCourses(liveTimes = {}) {
-  document.getElementById("courses").innerHTML = courses.map(c => {
-    const name = c[0];
-    const link = c[1];
-    const live = liveTimes[name];
+  // BEST tee time
+  const best = courses[0];
 
-    const timeText = live && live.time
-      ? live.time
-      : "Live tee time not connected yet";
-
-    const statusText = live && live.source
-      ? "Pulled live from " + live.source
-      : "Tap Book to check live availability";
-
-    return `
-      <div class="card">
-        <div class="course">${name}</div>
-        <div class="date">${dateText}</div>
-        <div class="time">Earliest available 18-hole morning tee time: ${timeText}</div>
-        <div class="status">${statusText}</div>
-        <div class="button"><a href="${link}" target="_blank">Book</a></div>
-      </div>
-    `;
-  }).join("");
+  // Render
+  document.getElementById("courses").innerHTML = `
+    <div class="card">
+      <div class="course">🔥 Best Available</div>
+      <div class="time">${best.time} — ${best.name}</div>
+    </div>
+  ` + courses.map(c => `
+    <div class="card">
+      <div class="course">${c.name}</div>
+      <div class="time">${c.time}</div>
+    </div>
+  `).join("");
 }
 
-async function loadLiveTimes() {
-  renderCourses();
-
-  if (!API_URL) return;
-
-  try {
-    const res = await fetch(API_URL + "?date=" + encodeURIComponent(nextSaturday.toISOString().slice(0,10)));
-    const data = await res.json();
-    renderCourses(data);
-  } catch (err) {
-    console.error(err);
-    renderCourses();
-  }
-}
-
-loadLiveTimes();
+loadData();
 </script>
-
-</body>
-</html>
